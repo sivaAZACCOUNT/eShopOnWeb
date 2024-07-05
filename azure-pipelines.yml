@@ -71,13 +71,38 @@ stages:
               WebAppName: 'prkwebapp2'
               packageForLinux: '$(Build.Artifactstagingdirectory)/**/web.zip'
 
+  # - stage: Deployment_QA
+  #   displayName: QA_Env
+  #   jobs:
+  #     - job: Deploy
+  #       pool:
+  #         vmImage: 'windows-latest'
+  #       steps:
+  #         - task: DownloadBuildArtifacts@1
+  #           inputs:
+  #             buildType: 'current'
+  #             downloadType: 'single'
+  #             artifactName: 'retailapp'
+  #             downloadPath: '$(Build.Artifactstagingdirectory)'
+  #         - task: AzureRmWebAppDeployment@4
+  #           inputs:
+  #             ConnectionType: AzureRM
+  #             azureSubscription: 'eshoponweb'
+  #             appType: webApp
+  #             WebAppName: 'satyaisksln'
+  #             packageForLinux: '$(Build.Artifactstagingdirectory)/**/web.zip'
+
   - stage: Deployment_QA
-    displayName: QA_Env
+    displayName: QA-Env
     jobs:
-      - job: Deploy
-        pool:
-          vmImage: 'windows-latest'
-        steps:
+    - deployment: Deploy
+      environment: QA-Env
+      pool:
+        vmImage: 'windows-latest'
+      strategy:
+       runOnce:
+         deploy:
+          steps:
           - task: DownloadBuildArtifacts@1
             inputs:
               buildType: 'current'
@@ -89,5 +114,5 @@ stages:
               ConnectionType: AzureRM
               azureSubscription: 'eshoponweb'
               appType: webApp
-              WebAppName: 'satyaisksln'
+              WebAppName: 'prkwebapp2'
               packageForLinux: '$(Build.Artifactstagingdirectory)/**/web.zip'
