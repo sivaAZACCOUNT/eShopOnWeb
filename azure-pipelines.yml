@@ -70,3 +70,24 @@ stages:
               appType: webApp
               WebAppName: 'prkwebapp2'
               packageForLinux: '$(Build.Artifactstagingdirectory)/**/web.zip'
+
+  - stage: Deployment_QA
+    displayName: QA_Env
+    jobs:
+      - job: Deploy
+        pool:
+          vmImage: 'windows-latest'
+        steps:
+          - task: DownloadBuildArtifacts@1
+            inputs:
+              buildType: 'current'
+              downloadType: 'single'
+              artifactName: 'retailapp'
+              downloadPath: '$(Build.Artifactstagingdirectory)'
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+              ConnectionType: AzureRM
+              azureSubscription: 'eshoponweb'
+              appType: webApp
+              WebAppName: 'satyaisksln'
+              packageForLinux: '$(Build.Artifactstagingdirectory)/**/web.zip'
